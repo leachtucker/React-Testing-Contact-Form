@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import axios from 'axios'
 
 const ContactForm = () => {
   const [data, setData] = useState();
   const { register, errors, handleSubmit } = useForm({
     mode: "onBlur",
   });
+
   const onSubmit = (data) => {
-    setData(data);
+    axios.post('https://reqres.in/api/users', data)
+      .then(resp => {
+        console.log(resp);
+        setData(resp.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   };
 
   return (
@@ -18,7 +27,7 @@ const ContactForm = () => {
           <input
             name="firstName"
             placeholder="Edd"
-            ref={register({ required: true, maxLength: 3 })}
+            ref={register({ required: true, minLength: 3 })}
           />
           {errors.firstName && (
             <p>Looks like there was an error: {errors.firstName.type}</p>
@@ -38,24 +47,24 @@ const ContactForm = () => {
         </div>
 
         <div>
-          <label htmlFor="email" placeholder="bluebill1049@hotmail.com">
+          <label htmlFor="email">
             Email*
           </label>
-          <input name="email" ref={register({ required: true })} />
+          <input name="email" ref={register({ required: true })} placeholder="bluebill1049@hotmail.com" />
           {errors.email && (
             <p>Looks like there was an error: {errors.email.type}</p>
           )}
         </div>
         <div>
           <label htmlFor="message">Message</label>
-          <textarea name="message" ref={register({ required: false })} />
+          <textarea name="message" role='messageInput' ref={register({ required: false })} />
         </div>
         {data && (
-          <pre style={{ textAlign: "left", color: "white" }}>
+          <pre title='output' style={{ textAlign: "left", color: "white" }}>
             {JSON.stringify(data, null, 2)}
           </pre>
         )}
-        <input type="submit" />
+        <button role='button' type="submit">Submit!</button>
       </form>
     </div>
   );
