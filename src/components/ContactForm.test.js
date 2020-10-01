@@ -1,9 +1,11 @@
-import React from "react";
-
-import { fireEvent, render, screen } from "@testing-library/react";
+import React from "react"
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import ContactForm from './ContactForm'
+import axios from 'axios'
 
 describe('Tests ContactForm', () => {
+
+    afterEach(cleanup);
 
     test('Forms renders', () => {
         render(<ContactForm />)
@@ -11,6 +13,7 @@ describe('Tests ContactForm', () => {
 
     test('Can submit form with proper input', async () => {
         // ARRANGE
+
         render(<ContactForm />)
 
         // ACT
